@@ -1,0 +1,15 @@
+# Override configuration with JSON
+
+private readonly IConfiguration _configuration;
+var appSettings = @"{ ""ConnectionStrings"": { ""ScannerDatabase"": ""Server=test;Database=database;Trusted_Connection=True;ConnectRetryCount=0"" }, ""Test"": ""10000"" }";
+var builder = new ConfigurationBuilder();
+builder.AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes(appSettings)));
+_configuration = builder.Build();
+
+# Mock configuration
+
+private readonly Mock<IConfiguration> _configuration;
+_configuration = new Mock<IConfiguration>();
+var configurationSection = new Mock<IConfigurationSection>();
+configurationSection.Setup(s => s.Value).Returns("value");
+_configuration.Setup(s => s.GetSection("key")).Returns(configurationSection.Object);
